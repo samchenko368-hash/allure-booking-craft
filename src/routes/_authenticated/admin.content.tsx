@@ -74,51 +74,16 @@ function SectionEditor({ row }: { row: SiteContentRow }) {
 
   return (
     <div className="mt-6 grid gap-5 border-t border-border/60 pt-6">
-      {Object.entries(content).map(([key, value]) => {
-        if (isLocalized(value)) {
-          const localized = value as Localized;
-          const long = Object.values(localized).some((s) => (s ?? "").length > 70);
-          return (
-            <LocalizedField
-              key={key}
-              label={key}
-              value={localized}
-              multiline={long}
-              onChange={(next) => setContent({ ...content, [key]: next })}
-            />
-          );
-        }
-        if (typeof value === "string") {
-          return (
-            <div key={key} className="grid gap-2">
-              <Label className="text-xs tracking-widest uppercase text-muted-foreground">{key}</Label>
-              <Input
-                value={value}
-                onChange={(e) => setContent({ ...content, [key]: e.target.value })}
-              />
-            </div>
-          );
-        }
-        return (
-          <div key={key} className="grid gap-2">
-            <Label className="text-xs tracking-widest uppercase text-muted-foreground">
-              {key} (JSON)
-            </Label>
-            <Textarea
-              rows={8}
-              className="font-mono text-xs"
-              defaultValue={JSON.stringify(value, null, 2)}
-              onBlur={(e) => {
-                try {
-                  setContent({ ...content, [key]: JSON.parse(e.target.value) });
-                } catch {
-                  toast.error(`Niepoprawny JSON w polu ${key}`);
-                }
-              }}
-            />
-          </div>
-        );
-      })}
+      {Object.entries(content).map(([key, value]) => (
+        <FieldNode
+          key={key}
+          path={key}
+          label={key}
+          value={value}
+          onChange={(next) => setContent({ ...content, [key]: next })}
+        />
+      ))}
+
 
       <div className="flex items-center justify-between gap-4">
         <div className="flex items-center gap-3">
