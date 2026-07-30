@@ -80,7 +80,7 @@ function SectionEditor({ row }: { row: SiteContentRow }) {
           path={key}
           label={key}
           value={value}
-          onChange={(next: Json) => setContent({ ...content, [key]: next })}
+          onChange={(next) => setContent({ ...content, [key]: next })}
         />
       ))}
 
@@ -105,8 +105,8 @@ function FieldNode({
 }: {
   path: string;
   label: string;
-  value: Json;
-  onChange: (next: Json) => void;
+  value: unknown;
+  onChange: (next: unknown) => void;
 }) {
   if (isLocalized(value)) {
     const localized = value as Localized;
@@ -116,7 +116,7 @@ function FieldNode({
         label={label}
         value={localized}
         multiline={long}
-        onChange={(next) => onChange(next as unknown as Json)}
+        onChange={(next) => onChange(next)}
       />
     );
   }
@@ -159,11 +159,11 @@ function FieldNode({
             <FieldNode
               path={`${path}.${i}`}
               label=""
-              value={item as Json}
+              value={item}
               onChange={(next) => {
-                const arr = [...(value as Json[])];
+                const arr = [...value];
                 arr[i] = next;
-                onChange(arr as unknown as Json);
+                onChange(arr);
               }}
             />
           </div>
@@ -172,7 +172,7 @@ function FieldNode({
     );
   }
 
-  const obj = value as Record<string, Json>;
+  const obj = value as Record<string, unknown>;
   return (
     <div className="grid gap-4 rounded-2xl border border-border/60 p-4">
       {label && (
@@ -186,7 +186,7 @@ function FieldNode({
           path={`${path}.${k}`}
           label={k}
           value={v}
-          onChange={(next) => onChange({ ...obj, [k]: next } as unknown as Json)}
+          onChange={(next) => onChange({ ...obj, [k]: next })}
         />
       ))}
     </div>
