@@ -21,7 +21,7 @@ export const Route = createFileRoute("/_authenticated/admin")({
   component: AdminLayout,
 });
 
-const NAV = [
+const NAV: { to: string; label: string; icon: typeof LayoutDashboard; exact?: boolean }[] = [
   { to: "/admin", label: "Pulpit", icon: LayoutDashboard, exact: true },
   { to: "/admin/bookings", label: "Rezerwacje", icon: CalendarCheck },
   { to: "/admin/leads", label: "Leady z czatu", icon: MessageSquare },
@@ -30,7 +30,7 @@ const NAV = [
   { to: "/admin/media", label: "Media", icon: Images },
   { to: "/admin/navigation", label: "Nawigacja", icon: Navigation },
   { to: "/admin/settings", label: "Ustawienia", icon: Settings },
-] as const;
+];
 
 function AdminLayout() {
   const { session, ready, isStaff } = useRoles();
@@ -80,7 +80,7 @@ function AdminLayout() {
               return (
                 <Link
                   key={item.to}
-                  to={item.to}
+                  to={item.to as never}
                   className={cn(
                     "flex items-center gap-3 rounded-xl px-3 py-2 text-sm transition-colors",
                     active ? "bg-primary text-primary-foreground" : "hover:bg-accent",
