@@ -163,9 +163,7 @@
     box-shadow 0.4s ease,
     border-color 0.4s ease,
     transform 0.4s ease;
-}
 
-@utility glass-panel {
   &:hover {
     border-color: color-mix(in oklab, var(--primary) 55%, transparent);
     box-shadow: var(--shadow-glow);
