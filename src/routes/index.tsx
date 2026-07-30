@@ -1,24 +1,54 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { useState } from "react";
+import { SiteHeader } from "@/components/site/SiteHeader";
+import { SiteFooter } from "@/components/site/SiteFooter";
+import { Hero } from "@/components/site/Hero";
+import { About } from "@/components/site/About";
+import { Services } from "@/components/site/Services";
+import { Showcase } from "@/components/site/Showcase";
+import { WhyUs } from "@/components/site/WhyUs";
+import { Gallery } from "@/components/site/Gallery";
+import { Testimonials } from "@/components/site/Testimonials";
+import { BookingSection } from "@/components/site/BookingSection";
+import { ChatWidget } from "@/components/site/ChatWidget";
+import { BookingProvider } from "@/components/site/BookingProvider";
 
-// No head() here: the home route inherits title/description/og/twitter from
-// __root.tsx, and ships no og:image so serve-time hosting can inject the
-// project's social preview (explicit og:image or latest screenshot).
+const title = "LUXE Beauty Atelier — salon fryzjersko-kosmetyczny";
+const description =
+  "Fryzjerstwo, paznokcie, brwi, rzesy i kosmetologia w jednym miejscu. Umow wizyte online lub porozmawiaj z naszym asystentem.";
+
 export const Route = createFileRoute("/")({
+  head: () => ({
+    meta: [
+      { title },
+      { name: "description", content: description },
+      { property: "og:title", content: title },
+      { property: "og:description", content: description },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary_large_image" },
+    ],
+  }),
   component: Index,
 });
 
-// IMPORTANT: Replace this placeholder. See ./README.md for routing conventions.
 function Index() {
+  const [chatOpen, setChatOpen] = useState(false);
+
   return (
-    <div
-      className="flex min-h-screen items-center justify-center"
-      style={{ backgroundColor: "#fcfbf8" }}
-    >
-      <img
-        data-lovable-blank-page-placeholder="REMOVE_THIS"
-        src="https://cdn.gpteng.co/blank-app-v1.svg"
-        alt="Your app will live here!"
-      />
-    </div>
+    <BookingProvider>
+      <SiteHeader />
+      <main className="relative z-10">
+        <Hero onChat={() => setChatOpen(true)} />
+        <About />
+        <Services />
+        <Showcase />
+        <WhyUs />
+        <Gallery />
+        <Testimonials />
+        <BookingSection />
+      </main>
+      <SiteFooter />
+      <ChatWidget open={chatOpen} setOpen={setChatOpen} />
+    </BookingProvider>
   );
 }
