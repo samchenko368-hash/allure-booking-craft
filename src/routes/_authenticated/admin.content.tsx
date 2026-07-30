@@ -80,10 +80,9 @@ function SectionEditor({ row }: { row: SiteContentRow }) {
           path={key}
           label={key}
           value={value}
-          onChange={(next) => setContent({ ...content, [key]: next })}
+          onChange={(next: Json) => setContent({ ...content, [key]: next })}
         />
       ))}
-
 
       <div className="flex items-center justify-between gap-4">
         <div className="flex items-center gap-3">
@@ -97,3 +96,100 @@ function SectionEditor({ row }: { row: SiteContentRow }) {
     </div>
   );
 }
+
+function FieldNode({
+  path,
+  label,
+  value,
+  onChange,
+}: {
+  path: string;
+  label: string;
+  value: Json;
+  onChange: (next: Json) => void;
+}) {
+  if (isLocalized(value)) {
+    const localized = value as Localized;
+    const long = Object.values(localized).some((s) => (s ?? "").length > 70);
+    return (
+      <LocalizedField
+        label={label}
+        value={localized}
+        multiline={long}
+        onChange={(next) => onChange(next as unknown as Json)}
+      />
+    );
+  }
+
+  if (typeof value === "string") {
+    return (
+      <div className="grid gap-2">
+        <Label className="text-xs tracking-widest uppercase text-muted-foreground">{label}</Label>
+        <Input value={value} onChange={(e) => onChange(e.target.value)} />
+      </div>
+    );
+  }
+
+  if (typeof value === "number" || typeof value === "boolean" || value === null) {
+    return (
+      <div className="grid gap-2">
+        <Label className="text-xs tracking-widest uppercase text-muted-foreground">{label}</Label>
+        <Input
+          value={String(value ?? "")}
+          onChange={(e) => {
+            const raw = e.target.value;
+            if (typeof value === "number") onChange(raw === "" ? 0 : Number(raw));
+            else if (typeof value === "boolean") onChange(raw === "true");
+            else onChange(raw);
+          }}
+        />
+      </div>
+    );
+  }
+
+  if (Array.isArray(value)) {
+    return (
+      <div className="grid gap-4 rounded-2xl border border-border/60 p-4">
+        <Label className="text-xs font-semibold tracking-widest uppercase text-muted-foreground">
+          {label} ({value.length})
+        </Label>
+        {value.map((item, i) => (
+          <div key={`${path}.${i}`} className="grid gap-4 rounded-xl bg-muted/30 p-3">
+            <span className="text-[11px] text-muted-foreground">#{i + 1}</span>
+            <FieldNode
+              path={`${path}.${i}`}
+              label=""
+              value={item as Json}
+              onChange={(next) => {
+                const arr = [...(value as Json[])];
+                arr[i] = next;
+                onChange(arr as unknown as Json);
+              }}
+            />
+          </div>
+        ))}
+      </div>
+    );
+  }
+
+  const obj = value as Record<string, Json>;
+  return (
+    <div className="grid gap-4 rounded-2xl border border-border/60 p-4">
+      {label && (
+        <Label className="text-xs font-semibold tracking-widest uppercase text-muted-foreground">
+          {label}
+        </Label>
+      )}
+      {Object.entries(obj).map(([k, v]) => (
+        <FieldNode
+          key={k}
+          path={`${path}.${k}`}
+          label={k}
+          value={v}
+          onChange={(next) => onChange({ ...obj, [k]: next } as unknown as Json)}
+        />
+      ))}
+    </div>
+  );
+}
+
