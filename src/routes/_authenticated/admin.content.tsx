@@ -74,51 +74,15 @@ function SectionEditor({ row }: { row: SiteContentRow }) {
 
   return (
     <div className="mt-6 grid gap-5 border-t border-border/60 pt-6">
-      {Object.entries(content).map(([key, value]) => {
-        if (isLocalized(value)) {
-          const localized = value as Localized;
-          const long = Object.values(localized).some((s) => (s ?? "").length > 70);
-          return (
-            <LocalizedField
-              key={key}
-              label={key}
-              value={localized}
-              multiline={long}
-              onChange={(next) => setContent({ ...content, [key]: next })}
-            />
-          );
-        }
-        if (typeof value === "string") {
-          return (
-            <div key={key} className="grid gap-2">
-              <Label className="text-xs tracking-widest uppercase text-muted-foreground">{key}</Label>
-              <Input
-                value={value}
-                onChange={(e) => setContent({ ...content, [key]: e.target.value })}
-              />
-            </div>
-          );
-        }
-        return (
-          <div key={key} className="grid gap-2">
-            <Label className="text-xs tracking-widest uppercase text-muted-foreground">
-              {key} (JSON)
-            </Label>
-            <Textarea
-              rows={8}
-              className="font-mono text-xs"
-              defaultValue={JSON.stringify(value, null, 2)}
-              onBlur={(e) => {
-                try {
-                  setContent({ ...content, [key]: JSON.parse(e.target.value) });
-                } catch {
-                  toast.error(`Niepoprawny JSON w polu ${key}`);
-                }
-              }}
-            />
-          </div>
-        );
-      })}
+      {Object.entries(content).map(([key, value]) => (
+        <FieldNode
+          key={key}
+          path={key}
+          label={key}
+          value={value}
+          onChange={(next) => setContent({ ...content, [key]: next })}
+        />
+      ))}
 
       <div className="flex items-center justify-between gap-4">
         <div className="flex items-center gap-3">
@@ -132,3 +96,100 @@ function SectionEditor({ row }: { row: SiteContentRow }) {
     </div>
   );
 }
+
+function FieldNode({
+  path,
+  label,
+  value,
+  onChange,
+}: {
+  path: string;
+  label: string;
+  value: unknown;
+  onChange: (next: unknown) => void;
+}) {
+  if (isLocalized(value)) {
+    const localized = value as Localized;
+    const long = Object.values(localized).some((s) => (s ?? "").length > 70);
+    return (
+      <LocalizedField
+        label={label}
+        value={localized}
+        multiline={long}
+        onChange={(next) => onChange(next)}
+      />
+    );
+  }
+
+  if (typeof value === "string") {
+    return (
+      <div className="grid gap-2">
+        <Label className="text-xs tracking-widest uppercase text-muted-foreground">{label}</Label>
+        <Input value={value} onChange={(e) => onChange(e.target.value)} />
+      </div>
+    );
+  }
+
+  if (typeof value === "number" || typeof value === "boolean" || value === null) {
+    return (
+      <div className="grid gap-2">
+        <Label className="text-xs tracking-widest uppercase text-muted-foreground">{label}</Label>
+        <Input
+          value={String(value ?? "")}
+          onChange={(e) => {
+            const raw = e.target.value;
+            if (typeof value === "number") onChange(raw === "" ? 0 : Number(raw));
+            else if (typeof value === "boolean") onChange(raw === "true");
+            else onChange(raw);
+          }}
+        />
+      </div>
+    );
+  }
+
+  if (Array.isArray(value)) {
+    return (
+      <div className="grid gap-4 rounded-2xl border border-border/60 p-4">
+        <Label className="text-xs font-semibold tracking-widest uppercase text-muted-foreground">
+          {label} ({value.length})
+        </Label>
+        {value.map((item, i) => (
+          <div key={`${path}.${i}`} className="grid gap-4 rounded-xl bg-muted/30 p-3">
+            <span className="text-[11px] text-muted-foreground">#{i + 1}</span>
+            <FieldNode
+              path={`${path}.${i}`}
+              label=""
+              value={item}
+              onChange={(next) => {
+                const arr = [...value];
+                arr[i] = next;
+                onChange(arr);
+              }}
+            />
+          </div>
+        ))}
+      </div>
+    );
+  }
+
+  const obj = value as Record<string, unknown>;
+  return (
+    <div className="grid gap-4 rounded-2xl border border-border/60 p-4">
+      {label && (
+        <Label className="text-xs font-semibold tracking-widest uppercase text-muted-foreground">
+          {label}
+        </Label>
+      )}
+      {Object.entries(obj).map(([k, v]) => (
+        <FieldNode
+          key={k}
+          path={`${path}.${k}`}
+          label={k}
+          value={v}
+          onChange={(next) => onChange({ ...obj, [k]: next })}
+        />
+      ))}
+    </div>
+  );
+}
+
