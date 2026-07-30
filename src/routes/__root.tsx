@@ -11,6 +11,11 @@ import { useEffect, type ReactNode } from "react";
 
 import appCss from "../styles.css?url";
 import { reportLovableError } from "../lib/lovable-error-reporting";
+import { I18nProvider } from "@/lib/i18n";
+import { BackgroundVideo } from "@/components/site/BackgroundVideo";
+import { Toaster } from "@/components/ui/sonner";
+import orchidVideo from "@/assets/orchid-petals.mp4.asset.json";
+
 
 function NotFoundComponent() {
   return (
