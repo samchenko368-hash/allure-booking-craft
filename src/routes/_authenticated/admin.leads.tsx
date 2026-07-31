@@ -3,6 +3,7 @@ import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
+import { useI18n } from "@/lib/i18n";
 import { chatLeadsQuery, deleteRow, insertRow, updateRow } from "@/lib/cms";
 import type { ChatLead } from "@/types/cms";
 
@@ -12,6 +13,7 @@ export const Route = createFileRoute("/_authenticated/admin/leads")({
 
 function LeadsAdmin() {
   const qc = useQueryClient();
+  const { t } = useI18n();
   const { data } = useQuery(chatLeadsQuery);
   const [openId, setOpenId] = useState<string | null>(null);
 
@@ -23,7 +25,7 @@ function LeadsAdmin() {
   async function convert(lead: ChatLead) {
     try {
       const booking = await insertRow("booking_requests", {
-        name: lead.name ?? "Lead z czatu",
+        name: lead.name ?? t("admin.leads.fromChat"),
         phone: lead.phone ?? "—",
         service_label: lead.preferred_service,
         preferred_date: /^\d{4}-\d{2}-\d{2}$/.test(lead.preferred_date ?? "") ? lead.preferred_date : null,
@@ -36,9 +38,9 @@ function LeadsAdmin() {
       await updateRow("chat_leads", lead.id, { is_processed: true, converted_booking_id: booking.id });
       await qc.invalidateQueries({ queryKey: ["chat_leads"] });
       await qc.invalidateQueries({ queryKey: ["booking_requests"] });
-      toast.success("Utworzono rezerwację");
+      toast.success(t("admin.leads.converted"));
     } catch {
-      toast.error("Nie udało się przekształcić leada");
+      toast.error(t("admin.leads.convertFail"));
     }
   }
 
@@ -47,15 +49,15 @@ function LeadsAdmin() {
       await deleteRow("chat_leads", lead.id);
       await qc.invalidateQueries({ queryKey: ["chat_leads"] });
     } catch {
-      toast.error("Tylko administrator może usuwać leady");
+      toast.error(t("admin.onlyAdminDelete"));
     }
   }
 
   return (
     <div className="grid gap-6">
       <header>
-        <h1 className="font-display text-4xl">Leady z czatu</h1>
-        <p className="text-muted-foreground">Rozmowy z asystentem i dane kontaktowe.</p>
+        <h1 className="font-display text-4xl">{t("admin.chatLeads")}</h1>
+        <p className="text-muted-foreground">{t("admin.leads.subtitle")}</p>
       </header>
 
       <div className="grid gap-3">
@@ -63,7 +65,7 @@ function LeadsAdmin() {
           <div key={lead.id} className="glass-panel rounded-3xl p-5">
             <div className="flex flex-wrap items-center justify-between gap-3">
               <div>
-                <p className="font-display text-xl">{lead.name ?? "Bez imienia"}</p>
+                <p className="font-display text-xl">{lead.name ?? t("admin.leads.noName")}</p>
                 <p className="text-sm text-muted-foreground">
                   {lead.phone ?? "—"} · {lead.preferred_service ?? "—"} · {lead.preferred_date ?? "—"}{" "}
                   {lead.preferred_time ?? ""}
@@ -71,18 +73,18 @@ function LeadsAdmin() {
               </div>
               <div className="flex flex-wrap gap-2">
                 <Button variant="ghost" size="sm" onClick={() => setOpenId(openId === lead.id ? null : lead.id)}>
-                  Transkrypcja
+                  {t("admin.leads.transcript")}
                 </Button>
                 <Button variant="outline" size="sm" onClick={() => toggleProcessed(lead)}>
-                  {lead.is_processed ? "Oznacz jako nowy" : "Oznacz jako obsłużony"}
+                  {lead.is_processed ? t("admin.leads.markNew") : t("admin.leads.markDone")}
                 </Button>
                 {!lead.converted_booking_id && (
                   <Button variant="hero" size="sm" onClick={() => convert(lead)}>
-                    Utwórz rezerwację
+                    {t("admin.leads.convert")}
                   </Button>
                 )}
                 <Button variant="ghost" size="sm" onClick={() => remove(lead)}>
-                  Usuń
+                  {t("common.delete")}
                 </Button>
               </div>
             </div>
@@ -97,13 +99,13 @@ function LeadsAdmin() {
                   </li>
                 ))}
                 {(lead.transcript ?? []).length === 0 && (
-                  <li className="text-muted-foreground">Brak transkrypcji.</li>
+                  <li className="text-muted-foreground">{t("admin.leads.noTranscript")}</li>
                 )}
               </ul>
             )}
           </div>
         ))}
-        {(data ?? []).length === 0 && <p className="text-sm text-muted-foreground">Brak leadów.</p>}
+        {(data ?? []).length === 0 && <p className="text-sm text-muted-foreground">{t("admin.leads.empty")}</p>}
       </div>
     </div>
   );

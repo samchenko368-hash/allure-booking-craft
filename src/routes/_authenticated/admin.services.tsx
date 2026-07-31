@@ -7,6 +7,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
 import { LocalizedField } from "@/components/admin/LocalizedField";
+import { useI18n } from "@/lib/i18n";
 import { categoriesQuery, deleteRow, insertRow, servicesQuery, updateRow } from "@/lib/cms";
 import type { Localized, Service } from "@/types/cms";
 
@@ -16,13 +17,14 @@ export const Route = createFileRoute("/_authenticated/admin/services")({
 
 function ServicesAdmin() {
   const qc = useQueryClient();
+  const { t } = useI18n();
   const { data: services } = useQuery(servicesQuery);
   const { data: categories } = useQuery(categoriesQuery);
   const [openId, setOpenId] = useState<string | null>(null);
 
   async function addService() {
     const created = await insertRow("services", {
-      name: { pl: "Nowa usluga", en: "New service" },
+      name: { pl: "Nowa usługa", en: "New service", uk: "Нова послуга", ru: "Новая услуга" },
       description: {},
       is_active: false,
       sort_order: (services?.length ?? 0) + 1,
@@ -35,11 +37,11 @@ function ServicesAdmin() {
     <div className="grid gap-6">
       <header className="flex flex-wrap items-center justify-between gap-3">
         <div>
-          <h1 className="font-display text-4xl">Usługi</h1>
-          <p className="text-muted-foreground">Cennik, opisy i zdjęcia zabiegów.</p>
+          <h1 className="font-display text-4xl">{t("admin.services")}</h1>
+          <p className="text-muted-foreground">{t("admin.services.subtitle")}</p>
         </div>
         <Button variant="hero" onClick={addService}>
-          Dodaj usługę
+          {t("admin.services.add")}
         </Button>
       </header>
 
@@ -52,7 +54,7 @@ function ServicesAdmin() {
             >
               <span className="font-display text-2xl">{service.name.pl ?? service.name.en}</span>
               <span className="text-xs text-muted-foreground">
-                {service.is_active ? "aktywna" : "ukryta"} · {service.price_from ?? "—"} {service.currency}
+                {service.is_active ? t("admin.services.active") : t("admin.services.hidden")} · {service.price_from ?? "—"} {service.currency}
               </span>
             </button>
             {openId === service.id && (
@@ -76,6 +78,7 @@ function ServiceEditor({
   categories: { id: string; label: string }[];
 }) {
   const qc = useQueryClient();
+  const { t } = useI18n();
   const [draft, setDraft] = useState<Service>(service);
   const [busy, setBusy] = useState(false);
 
@@ -97,9 +100,9 @@ function ServiceEditor({
         sort_order: draft.sort_order,
       });
       await qc.invalidateQueries({ queryKey: ["services"] });
-      toast.success("Zapisano");
+      toast.success(t("common.saved"));
     } catch {
-      toast.error("Nie udało się zapisać");
+      toast.error(t("common.saveFail"));
     } finally {
       setBusy(false);
     }
@@ -108,14 +111,14 @@ function ServiceEditor({
   async function remove() {
     await deleteRow("services", service.id);
     await qc.invalidateQueries({ queryKey: ["services"] });
-    toast.success("Usunięto");
+    toast.success(t("common.deleted"));
   }
 
   return (
     <div className="mt-6 grid gap-5 border-t border-border/60 pt-6">
-      <LocalizedField label="Nazwa" value={draft.name} onChange={(v: Localized) => patch({ name: v })} />
+      <LocalizedField label={t("admin.f.name")} value={draft.name} onChange={(v: Localized) => patch({ name: v })} />
       <LocalizedField
-        label="Opis"
+        label={t("admin.f.description")}
         multiline
         value={draft.description}
         onChange={(v: Localized) => patch({ description: v })}
@@ -123,7 +126,7 @@ function ServiceEditor({
 
       <div className="grid gap-4 sm:grid-cols-3">
         <div className="grid gap-2">
-          <Label>Kategoria</Label>
+          <Label>{t("admin.f.category")}</Label>
           <select
             className="h-10 rounded-md border border-input bg-background px-3 text-sm"
             value={draft.category_id ?? ""}
@@ -138,7 +141,7 @@ function ServiceEditor({
           </select>
         </div>
         <div className="grid gap-2">
-          <Label>Cena od</Label>
+          <Label>{t("admin.f.priceFrom")}</Label>
           <Input
             type="number"
             value={draft.price_from ?? ""}
@@ -146,7 +149,7 @@ function ServiceEditor({
           />
         </div>
         <div className="grid gap-2">
-          <Label>Czas (min)</Label>
+          <Label>{t("admin.f.duration")}</Label>
           <Input
             type="number"
             value={draft.duration_min ?? ""}
@@ -156,21 +159,21 @@ function ServiceEditor({
       </div>
 
       <div className="grid gap-2">
-        <Label>URL zdjęcia</Label>
+        <Label>{t("admin.f.imageUrl")}</Label>
         <Input value={draft.image_url ?? ""} onChange={(e) => patch({ image_url: e.target.value })} />
       </div>
 
       <div className="flex flex-wrap items-center gap-6">
         <div className="flex items-center gap-3">
           <Switch checked={draft.is_active} onCheckedChange={(v) => patch({ is_active: v })} />
-          <Label>Aktywna</Label>
+          <Label>{t("admin.f.active")}</Label>
         </div>
         <div className="flex items-center gap-3">
           <Switch checked={draft.is_featured} onCheckedChange={(v) => patch({ is_featured: v })} />
-          <Label>Wyróżniona</Label>
+          <Label>{t("admin.f.featured")}</Label>
         </div>
         <div className="flex items-center gap-2">
-          <Label>Kolejność</Label>
+          <Label>{t("admin.f.order")}</Label>
           <Input
             type="number"
             className="w-20"
@@ -182,10 +185,10 @@ function ServiceEditor({
 
       <div className="flex justify-between">
         <Button variant="outline" onClick={remove}>
-          Usuń
+          {t("common.delete")}
         </Button>
         <Button variant="hero" onClick={save} disabled={busy}>
-          Zapisz
+          {t("common.save")}
         </Button>
       </div>
     </div>
