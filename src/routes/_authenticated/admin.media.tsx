@@ -4,6 +4,7 @@ import { useRef, useState } from "react";
 import { toast } from "sonner";
 import { Copy, Trash2, UploadCloud } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { useI18n } from "@/lib/i18n";
 import { deleteRow, mediaQuery, uploadMedia } from "@/lib/cms";
 
 export const Route = createFileRoute("/_authenticated/admin/media")({
@@ -12,6 +13,7 @@ export const Route = createFileRoute("/_authenticated/admin/media")({
 
 function MediaAdmin() {
   const qc = useQueryClient();
+  const { t } = useI18n();
   const { data } = useQuery(mediaQuery);
   const inputRef = useRef<HTMLInputElement>(null);
   const [busy, setBusy] = useState(false);
@@ -22,9 +24,9 @@ function MediaAdmin() {
     try {
       for (const file of Array.from(files)) await uploadMedia(file);
       await qc.invalidateQueries({ queryKey: ["media_assets"] });
-      toast.success("Przesłano pliki");
+      toast.success(t("admin.media.uploaded"));
     } catch {
-      toast.error("Nie udało się przesłać pliku");
+      toast.error(t("admin.media.uploadFail"));
     } finally {
       setBusy(false);
       if (inputRef.current) inputRef.current.value = "";
@@ -35,11 +37,11 @@ function MediaAdmin() {
     <div className="grid gap-6">
       <header className="flex flex-wrap items-center justify-between gap-3">
         <div>
-          <h1 className="font-display text-4xl">Biblioteka mediów</h1>
-          <p className="text-muted-foreground">Zdjęcia i wideo używane na stronie.</p>
+          <h1 className="font-display text-4xl">{t("admin.media.title")}</h1>
+          <p className="text-muted-foreground">{t("admin.media.subtitle")}</p>
         </div>
         <Button variant="hero" disabled={busy} onClick={() => inputRef.current?.click()}>
-          <UploadCloud className="h-4 w-4" /> {busy ? "Przesyłanie…" : "Prześlij"}
+          <UploadCloud className="h-4 w-4" /> {busy ? t("admin.media.uploading") : t("admin.media.upload")}
         </Button>
         <input
           ref={inputRef}
@@ -74,7 +76,7 @@ function MediaAdmin() {
                   size="icon"
                   onClick={() => {
                     navigator.clipboard.writeText(asset.public_url);
-                    toast.success("Skopiowano adres");
+                    toast.success(t("admin.media.copied"));
                   }}
                 >
                   <Copy className="h-4 w-4" />
@@ -94,7 +96,7 @@ function MediaAdmin() {
           </div>
         ))}
         {(data ?? []).length === 0 && (
-          <p className="text-sm text-muted-foreground">Brak plików — prześlij pierwszy.</p>
+          <p className="text-sm text-muted-foreground">{t("admin.media.empty")}</p>
         )}
       </div>
     </div>

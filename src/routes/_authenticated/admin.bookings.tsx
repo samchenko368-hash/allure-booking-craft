@@ -4,6 +4,7 @@ import { useState } from "react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
+import { useI18n } from "@/lib/i18n";
 import { bookingsQuery, deleteRow, updateRow } from "@/lib/cms";
 import type { BookingRequest } from "@/types/cms";
 
@@ -15,6 +16,7 @@ const STATUSES = ["new", "contacted", "confirmed", "done", "cancelled"] as const
 
 function BookingsAdmin() {
   const qc = useQueryClient();
+  const { t } = useI18n();
   const { data } = useQuery(bookingsQuery);
   const [filter, setFilter] = useState<string>("all");
   const [openId, setOpenId] = useState<string | null>(null);
@@ -29,8 +31,8 @@ function BookingsAdmin() {
   return (
     <div className="grid gap-6">
       <header>
-        <h1 className="font-display text-4xl">Rezerwacje</h1>
-        <p className="text-muted-foreground">Zgłoszenia z formularza i z czatu.</p>
+        <h1 className="font-display text-4xl">{t("admin.bookings")}</h1>
+        <p className="text-muted-foreground">{t("admin.bookings.subtitle")}</p>
       </header>
 
       <div className="flex flex-wrap gap-2">
@@ -42,7 +44,7 @@ function BookingsAdmin() {
               filter === s ? "bg-primary text-primary-foreground" : "glass-panel"
             }`}
           >
-            {s}
+            {t(`status.${s}`)}
           </button>
         ))}
       </div>
@@ -67,18 +69,18 @@ function BookingsAdmin() {
               >
                 {STATUSES.map((s) => (
                   <option key={s} value={s}>
-                    {s}
+                    {t(`status.${s}`)}
                   </option>
                 ))}
               </select>
               <Button variant="ghost" size="sm" onClick={() => setOpenId(openId === b.id ? null : b.id)}>
-                Szczegóły
+                {t("common.details")}
               </Button>
             </div>
             {openId === b.id && <BookingDetails booking={b} />}
           </div>
         ))}
-        {rows.length === 0 && <p className="text-sm text-muted-foreground">Brak zgłoszeń.</p>}
+        {rows.length === 0 && <p className="text-sm text-muted-foreground">{t("admin.dash.none")}</p>}
       </div>
     </div>
   );
@@ -86,21 +88,22 @@ function BookingsAdmin() {
 
 function BookingDetails({ booking }: { booking: BookingRequest }) {
   const qc = useQueryClient();
+  const { t } = useI18n();
   const [notes, setNotes] = useState(booking.internal_notes ?? "");
 
   async function save() {
     await updateRow("booking_requests", booking.id, { internal_notes: notes });
     await qc.invalidateQueries({ queryKey: ["booking_requests"] });
-    toast.success("Zapisano notatkę");
+    toast.success(t("common.saved"));
   }
 
   async function remove() {
     try {
       await deleteRow("booking_requests", booking.id);
       await qc.invalidateQueries({ queryKey: ["booking_requests"] });
-      toast.success("Usunięto");
+      toast.success(t("common.deleted"));
     } catch {
-      toast.error("Tylko administrator może usuwać zgłoszenia");
+      toast.error(t("admin.onlyAdminDelete"));
     }
   }
 
@@ -108,20 +111,21 @@ function BookingDetails({ booking }: { booking: BookingRequest }) {
     <div className="mt-5 grid gap-4 border-t border-border/60 pt-5">
       {booking.message && <p className="text-sm">{booking.message}</p>}
       <p className="text-xs text-muted-foreground">
-        Język: {booking.language} · Utworzono: {new Date(booking.created_at).toLocaleString()}
+        {t("admin.language")}: {booking.language} · {t("admin.createdAt")}:{" "}
+        {new Date(booking.created_at).toLocaleString()}
       </p>
       <Textarea
         rows={3}
-        placeholder="Notatka wewnętrzna"
+        placeholder={t("admin.notes.placeholder")}
         value={notes}
         onChange={(e) => setNotes(e.target.value)}
       />
       <div className="flex justify-between">
         <Button variant="outline" size="sm" onClick={remove}>
-          Usuń
+          {t("common.delete")}
         </Button>
         <Button variant="hero" size="sm" onClick={save}>
-          Zapisz notatkę
+          {t("admin.notes.save")}
         </Button>
       </div>
     </div>

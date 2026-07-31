@@ -7,6 +7,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
 import { LocalizedField } from "@/components/admin/LocalizedField";
+import { useI18n } from "@/lib/i18n";
 import { deleteRow, insertRow, navigationQuery, updateRow } from "@/lib/cms";
 import type { NavItem } from "@/types/cms";
 
@@ -16,12 +17,13 @@ export const Route = createFileRoute("/_authenticated/admin/navigation")({
 
 function NavigationAdmin() {
   const qc = useQueryClient();
+  const { t } = useI18n();
   const { data } = useQuery(navigationQuery);
 
   async function add() {
     await insertRow("navigation_items", {
       location: "header",
-      label: { pl: "Nowy link" },
+      label: { pl: "Nowy link", en: "New link", uk: "Нове посилання", ru: "Новая ссылка" },
       href: "/",
       sort_order: (data?.length ?? 0) + 1,
     });
@@ -32,11 +34,11 @@ function NavigationAdmin() {
     <div className="grid gap-6">
       <header className="flex flex-wrap items-center justify-between gap-3">
         <div>
-          <h1 className="font-display text-4xl">Nawigacja</h1>
-          <p className="text-muted-foreground">Menu w nagłówku i stopce.</p>
+          <h1 className="font-display text-4xl">{t("admin.navigation")}</h1>
+          <p className="text-muted-foreground">{t("admin.nav.subtitle")}</p>
         </div>
         <Button variant="hero" onClick={add}>
-          Dodaj pozycję
+          {t("admin.nav.add")}
         </Button>
       </header>
 
@@ -51,6 +53,7 @@ function NavigationAdmin() {
 
 function NavEditor({ item }: { item: NavItem }) {
   const qc = useQueryClient();
+  const { t } = useI18n();
   const [draft, setDraft] = useState<NavItem>(item);
 
   async function save() {
@@ -62,7 +65,7 @@ function NavEditor({ item }: { item: NavItem }) {
       is_visible: draft.is_visible,
     });
     await qc.invalidateQueries({ queryKey: ["navigation_items"] });
-    toast.success("Zapisano");
+    toast.success(t("common.saved"));
   }
 
   async function remove() {
@@ -73,17 +76,17 @@ function NavEditor({ item }: { item: NavItem }) {
   return (
     <div className="glass-panel grid gap-5 rounded-3xl p-6">
       <LocalizedField
-        label="Etykieta"
+        label={t("admin.f.label")}
         value={draft.label}
         onChange={(label) => setDraft({ ...draft, label })}
       />
       <div className="grid gap-4 sm:grid-cols-3">
         <div className="grid gap-2">
-          <Label>Adres</Label>
+          <Label>{t("admin.f.href")}</Label>
           <Input value={draft.href} onChange={(e) => setDraft({ ...draft, href: e.target.value })} />
         </div>
         <div className="grid gap-2">
-          <Label>Miejsce</Label>
+          <Label>{t("admin.f.location")}</Label>
           <select
             className="h-10 rounded-md border border-input bg-background px-3 text-sm"
             value={draft.location}
@@ -94,7 +97,7 @@ function NavEditor({ item }: { item: NavItem }) {
           </select>
         </div>
         <div className="grid gap-2">
-          <Label>Kolejność</Label>
+          <Label>{t("admin.f.order")}</Label>
           <Input
             type="number"
             value={draft.sort_order}
@@ -108,14 +111,14 @@ function NavEditor({ item }: { item: NavItem }) {
             checked={draft.is_visible}
             onCheckedChange={(v) => setDraft({ ...draft, is_visible: v })}
           />
-          <Label>Widoczna</Label>
+          <Label>{t("admin.f.visible")}</Label>
         </div>
         <div className="flex gap-2">
           <Button variant="outline" onClick={remove}>
-            Usuń
+            {t("common.delete")}
           </Button>
           <Button variant="hero" onClick={save}>
-            Zapisz
+            {t("common.save")}
           </Button>
         </div>
       </div>
