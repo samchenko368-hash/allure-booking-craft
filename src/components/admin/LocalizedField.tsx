@@ -4,7 +4,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { LANGS, type Lang, type Localized } from "@/types/cms";
-import { LANG_LABELS } from "@/lib/i18n";
+import { LANG_LABELS, useI18n } from "@/lib/i18n";
 import { cn } from "@/lib/utils";
 
 export function LocalizedField({
@@ -18,6 +18,7 @@ export function LocalizedField({
   onChange: (next: Localized) => void;
   multiline?: boolean;
 }) {
+  const { t } = useI18n();
   const v = value ?? {};
   const [active, setActive] = useState<Lang>("pl");
   const filled = LANGS.filter((l) => (v[l] ?? "").trim().length > 0).length;
@@ -29,7 +30,7 @@ export function LocalizedField({
           {label}
         </Label>
         <span className="text-[11px] text-muted-foreground">
-          {filled}/{LANGS.length} języków
+          {filled}/{LANGS.length} {t("admin.lang.languages")}
         </span>
       </div>
 
@@ -69,7 +70,7 @@ export function LocalizedField({
             onChange(next);
           }}
         >
-          Skopiuj do wszystkich
+          {t("admin.lang.copyAll")}
         </Button>
       </div>
 
