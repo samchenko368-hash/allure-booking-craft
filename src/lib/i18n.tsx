@@ -288,11 +288,15 @@ export function I18nProvider({ children }: { children: ReactNode }) {
     if (stored && (LANGS as readonly string[]).includes(stored)) setLangState(stored);
   }, []);
 
+  useEffect(() => {
+    document.documentElement.lang = lang;
+  }, [lang]);
+
   const setLang = useCallback((next: Lang) => {
     setLangState(next);
     window.localStorage.setItem(STORAGE_KEY, next);
-    document.documentElement.lang = next;
   }, []);
+
 
   const t = useCallback(
     (key: string) => dict[key]?.[lang] ?? dict[key]?.[DEFAULT_LANG] ?? key,
