@@ -1,0 +1,1 @@
+ALTER TABLE public.booking_requests ADD COLUMN IF NOT EXISTS contact_method text NOT NULL DEFAULT 'call';

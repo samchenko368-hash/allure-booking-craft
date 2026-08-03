@@ -9,7 +9,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Checkbox } from "@/components/ui/checkbox";
 import { insertRow, servicesQuery, staffQuery } from "@/lib/cms";
 import { useI18n } from "@/lib/i18n";
-import type { BookingSource } from "@/types/cms";
+import { CONTACT_METHODS, type BookingSource, type ContactMethod } from "@/types/cms";
 
 export function BookingForm({
   source = "website_form",
@@ -33,6 +33,7 @@ export function BookingForm({
     date: "",
     time: "",
     message: "",
+    contactMethod: "call" as ContactMethod,
     consent: false,
   });
   const [errors, setErrors] = useState<Record<string, string>>({});
@@ -66,6 +67,7 @@ export function BookingForm({
         preferred_date: form.date || null,
         preferred_time: form.time || null,
         message: form.message.trim() || null,
+        contact_method: form.contactMethod,
         consent: true,
         source,
         language: lang,
@@ -177,6 +179,27 @@ export function BookingForm({
             value={form.time}
             onChange={(e) => setForm({ ...form, time: e.target.value })}
           />
+        </div>
+      </div>
+
+      <div className="grid gap-2">
+        <Label>{t("booking.contactMethod")}</Label>
+        <div className="flex flex-wrap gap-2">
+          {CONTACT_METHODS.map((m) => (
+            <button
+              key={m}
+              type="button"
+              onClick={() => setForm({ ...form, contactMethod: m })}
+              className={
+                "rounded-full border px-4 py-2 text-sm transition-all " +
+                (form.contactMethod === m
+                  ? "border-primary bg-primary text-primary-foreground"
+                  : "border-border hover:bg-accent")
+              }
+            >
+              {t(`contact.${m}`)}
+            </button>
+          ))}
         </div>
       </div>
 

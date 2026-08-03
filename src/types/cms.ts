@@ -94,6 +94,10 @@ export interface StaffMember {
 export type BookingStatus = "new" | "contacted" | "confirmed" | "cancelled" | "completed";
 export type BookingSource = "website_form" | "chat" | "service_card_cta";
 
+export type ContactMethod = "call" | "sms" | "telegram" | "whatsapp" | "email";
+
+export const CONTACT_METHODS: ContactMethod[] = ["call", "sms", "telegram", "whatsapp", "email"];
+
 export interface BookingRequest {
   id: string;
   name: string;
@@ -106,6 +110,7 @@ export interface BookingRequest {
   preferred_time: string | null;
   message: string | null;
   consent: boolean;
+  contact_method: ContactMethod;
   source: BookingSource;
   status: BookingStatus;
   language: Lang;

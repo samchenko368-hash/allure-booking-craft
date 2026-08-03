@@ -17,6 +17,7 @@ export type Database = {
       booking_requests: {
         Row: {
           consent: boolean
+          contact_method: string
           created_at: string
           email: string | null
           id: string
@@ -36,6 +37,7 @@ export type Database = {
         }
         Insert: {
           consent?: boolean
+          contact_method?: string
           created_at?: string
           email?: string | null
           id?: string
@@ -55,6 +57,7 @@ export type Database = {
         }
         Update: {
           consent?: boolean
+          contact_method?: string
           created_at?: string
           email?: string | null
           id?: string

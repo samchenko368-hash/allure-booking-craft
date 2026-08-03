@@ -56,7 +56,7 @@ function BookingsAdmin() {
               <div>
                 <p className="font-display text-xl">{b.name}</p>
                 <p className="text-sm text-muted-foreground">
-                  {b.phone} {b.email ? `· ${b.email}` : ""} · {b.source}
+                  {b.phone} {b.email ? `· ${b.email}` : ""} · {t(`contact.${b.contact_method ?? "call"}`)} · {b.source}
                 </p>
               </div>
               <div className="text-sm text-muted-foreground">
