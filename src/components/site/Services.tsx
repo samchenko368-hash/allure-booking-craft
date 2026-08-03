@@ -7,6 +7,7 @@ import { categoriesQuery, contentQuery, sectionOf, servicesQuery } from "@/lib/c
 import { useI18n } from "@/lib/i18n";
 import { cn } from "@/lib/utils";
 import type { Localized, Service } from "@/types/cms";
+import { FlipCard } from "@/components/ui/flip-card";
 import { Reveal } from "./Reveal";
 import { useBooking } from "./BookingProvider";
 
