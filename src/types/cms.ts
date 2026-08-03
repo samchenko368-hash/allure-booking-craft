@@ -85,6 +85,7 @@ export interface StaffMember {
   id: string;
   name: string;
   role_label: Localized;
+  bio: Localized;
   photo_url: string | null;
   is_active: boolean;
   sort_order: number;
