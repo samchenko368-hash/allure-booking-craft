@@ -9,8 +9,8 @@ type FlipCardContextValue = { rotate: FlipCardRotate };
 const FlipCardContext = createContext<FlipCardContextValue | null>(null);
 
 const ROTATION_CLASS = {
-  x: { hover: "group-hover/card:rotate-x-180", back: "rotate-x-180" },
-  y: { hover: "group-hover/card:rotate-y-180", back: "rotate-y-180" },
+  x: { hover: "group-hover/card:[transform:rotateX(180deg)]" },
+  y: { hover: "group-hover/card:[transform:rotateY(180deg)]" },
 } as const;
 
 function useFlipCard() {
