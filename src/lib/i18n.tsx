@@ -41,6 +41,12 @@ export const dict: Dict = {
   "booking.staff": { pl: "Specjalista (opcjonalnie)", en: "Specialist (optional)", uk: "Майстер (необовязково)", ru: "Мастер (необязательно)" },
   "booking.date": { pl: "Preferowana data", en: "Preferred date", uk: "Бажана дата", ru: "Желаемая дата" },
   "booking.time": { pl: "Preferowana godzina", en: "Preferred time", uk: "Бажаний час", ru: "Желаемое время" },
+  "booking.contactMethod": { pl: "Preferowany kontakt", en: "Preferred contact", uk: "Спосіб звязку", ru: "Способ связи" },
+  "contact.call": { pl: "Telefon", en: "Phone call", uk: "Дзвінок", ru: "Созвониться" },
+  "contact.sms": { pl: "SMS", en: "Text message", uk: "Повідомлення", ru: "Сообщение" },
+  "contact.telegram": { pl: "Telegram", en: "Telegram", uk: "Telegram", ru: "Telegram" },
+  "contact.whatsapp": { pl: "WhatsApp", en: "WhatsApp", uk: "WhatsApp", ru: "WhatsApp" },
+  "contact.email": { pl: "E-mail", en: "Email", uk: "Електронна пошта", ru: "Электронная почта" },
   "booking.message": { pl: "Wiadomosc", en: "Message", uk: "Повідомлення", ru: "Сообщение" },
   "booking.consent": {
     pl: "Zgadzam sie na kontakt w sprawie rezerwacji.",
