@@ -433,6 +433,7 @@ export type Database = {
       }
       staff_members: {
         Row: {
+          bio: Json
           created_at: string
           id: string
           is_active: boolean
@@ -442,6 +443,7 @@ export type Database = {
           sort_order: number
         }
         Insert: {
+          bio?: Json
           created_at?: string
           id?: string
           is_active?: boolean
@@ -451,6 +453,7 @@ export type Database = {
           sort_order?: number
         }
         Update: {
+          bio?: Json
           created_at?: string
           id?: string
           is_active?: boolean
