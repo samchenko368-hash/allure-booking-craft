@@ -9,6 +9,7 @@ import { Showcase } from "@/components/site/Showcase";
 import { WhyUs } from "@/components/site/WhyUs";
 import { Gallery } from "@/components/site/Gallery";
 import { Testimonials } from "@/components/site/Testimonials";
+import { Team } from "@/components/site/Team";
 import { BookingSection } from "@/components/site/BookingSection";
 import { ChatWidget } from "@/components/site/ChatWidget";
 import { BookingProvider } from "@/components/site/BookingProvider";
@@ -42,6 +43,7 @@ function Index() {
         <About />
         <Services />
         <Showcase />
+        <Team />
         <WhyUs />
         <Gallery />
         <Testimonials />

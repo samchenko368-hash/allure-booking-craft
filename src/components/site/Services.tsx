@@ -7,6 +7,7 @@ import { categoriesQuery, contentQuery, sectionOf, servicesQuery } from "@/lib/c
 import { useI18n } from "@/lib/i18n";
 import { cn } from "@/lib/utils";
 import type { Localized, Service } from "@/types/cms";
+import { FlipCard } from "@/components/ui/flip-card";
 import { Reveal } from "./Reveal";
 import { useBooking } from "./BookingProvider";
 
@@ -66,35 +67,43 @@ export function Services() {
         <div className="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
           {visible.map((service, i) => (
             <Reveal key={service.id} delay={i * 70}>
-              <article className="group glass-panel h-full overflow-hidden rounded-3xl transition-all duration-500 hover:-translate-y-1.5 hover:shadow-luxe">
-                {service.image_url && (
-                  <div className="h-52 overflow-hidden">
+              <FlipCard className="h-[26rem] w-full">
+                <FlipCard.Front className="glass-panel overflow-hidden rounded-3xl">
+                  {service.image_url ? (
                     <img
                       src={service.image_url}
                       alt={tr(service.name)}
                       loading="lazy"
-                      className="h-full w-full object-cover transition-transform duration-[1.1s] group-hover:scale-110"
+                      className="h-full w-full object-cover"
                     />
+                  ) : (
+                    <div className="h-full w-full bg-secondary/50" />
+                  )}
+                  <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-background/95 to-transparent p-6">
+                    <h3 className="font-display text-2xl">{tr(service.name)}</h3>
                   </div>
-                )}
-                <div className="p-6">
-                  <h3 className="font-display text-2xl">{tr(service.name)}</h3>
-                  <p className="mt-2 line-clamp-2 text-sm text-muted-foreground">
-                    {tr(service.description)}
-                  </p>
-                  <div className="mt-4 flex items-center gap-4 text-sm text-muted-foreground">
-                    {service.duration_min && (
-                      <span className="inline-flex items-center gap-1.5">
-                        <Clock className="h-4 w-4 text-primary" />
-                        {service.duration_min} {t("common.min")}
-                      </span>
-                    )}
-                    {service.price_from && (
-                      <span className="inline-flex items-center gap-1.5">
-                        <Tag className="h-4 w-4 text-primary" />
-                        {t("common.from")} {Number(service.price_from)} {service.currency}
-                      </span>
-                    )}
+                </FlipCard.Front>
+
+                <FlipCard.Back className="glass-panel flex flex-col justify-between rounded-3xl p-6">
+                  <div>
+                    <h3 className="font-display text-2xl">{tr(service.name)}</h3>
+                    <p className="mt-3 line-clamp-5 text-sm text-muted-foreground">
+                      {tr(service.description)}
+                    </p>
+                    <div className="mt-4 flex flex-wrap items-center gap-4 text-sm text-muted-foreground">
+                      {service.duration_min && (
+                        <span className="inline-flex items-center gap-1.5">
+                          <Clock className="h-4 w-4 text-primary" />
+                          {service.duration_min} {t("common.min")}
+                        </span>
+                      )}
+                      {service.price_from && (
+                        <span className="inline-flex items-center gap-1.5">
+                          <Tag className="h-4 w-4 text-primary" />
+                          {t("common.from")} {Number(service.price_from)} {service.currency}
+                        </span>
+                      )}
+                    </div>
                   </div>
                   <div className="mt-5 flex gap-2">
                     <Button variant="hero" className="flex-1" onClick={() => open({ serviceLabel: tr(service.name), source: "service_card_cta" })}>
@@ -104,8 +113,8 @@ export function Services() {
                       {t("common.details")}
                     </Button>
                   </div>
-                </div>
-              </article>
+                </FlipCard.Back>
+              </FlipCard>
             </Reveal>
           ))}
         </div>

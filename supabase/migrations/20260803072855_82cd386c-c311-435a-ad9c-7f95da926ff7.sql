@@ -1,0 +1,1 @@
+ALTER TABLE public.staff_members ADD COLUMN IF NOT EXISTS bio jsonb NOT NULL DEFAULT '{}'::jsonb;
