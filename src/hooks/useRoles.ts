@@ -36,14 +36,8 @@ export function useRoles() {
     (async () => {
       /* eslint-disable @typescript-eslint/no-explicit-any */
       const db = supabase as any;
-      let { data } = await db.from("user_roles").select("role").eq("user_id", session.user.id);
-      if (!data || data.length === 0) {
-        const { data: claimed } = await db.rpc("claim_first_admin");
-        if (claimed) {
-          const res = await db.from("user_roles").select("role").eq("user_id", session.user.id);
-          data = res.data;
-        }
-      }
+      const { data } = await db.from("user_roles").select("role").eq("user_id", session.user.id);
+
       if (!cancelled) {
         setRoles(((data ?? []) as { role: AppRole }[]).map((r) => r.role));
         setReady(true);
