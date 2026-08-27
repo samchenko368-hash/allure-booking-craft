@@ -1,12 +1,13 @@
 import { useEffect, useRef, useState } from "react";
 
 const PLAYBACK_RATE = 0.86;
-const CROSSFADE_MS = 1100;
+const CROSSFADE_MS = 2200;
+const CROSSFADE_LEAD_SECONDS = 2.35;
 
 /**
  * A single fixed, muted background video for the entire page.
- * Two synchronized elements cross-fade at the end of the clip, keeping the
- * transition unobtrusive while visitors scroll the site content above it.
+ * Two synchronized elements use a long, eased cross-fade before the end of the
+ * clip so the return to the first frame feels gentle while visitors scroll above it.
  */
 export function BackgroundVideo({ src, poster }: { src?: string; poster?: string }) {
   const [enabled, setEnabled] = useState(false);
@@ -40,7 +41,7 @@ export function BackgroundVideo({ src, poster }: { src?: string; poster?: string
 
     const beginCrossfade = (from: HTMLVideoElement) => {
       if (isCrossfading || from !== videos[currentVideo]) return;
-      if (!Number.isFinite(from.duration) || from.duration - from.currentTime > 1.25) return;
+      if (!Number.isFinite(from.duration) || from.duration - from.currentTime > CROSSFADE_LEAD_SECONDS) return;
 
       isCrossfading = true;
       const nextVideo = 1 - currentVideo;
@@ -84,7 +85,7 @@ export function BackgroundVideo({ src, poster }: { src?: string; poster?: string
         <video
           key={index}
           ref={reference}
-          className={`absolute inset-0 h-full w-full object-cover object-[65%_center] transition-opacity duration-1000 ease-in-out ${
+          className={`absolute inset-0 h-full w-full object-cover object-[65%_center] transition-opacity [transition-duration:2200ms] ease-in-out ${
             activeVideo === index ? "opacity-100" : "opacity-0"
           }`}
           poster={poster}
