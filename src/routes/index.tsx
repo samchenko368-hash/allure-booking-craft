@@ -13,6 +13,7 @@ import { Team } from "@/components/site/Team";
 import { BookingSection } from "@/components/site/BookingSection";
 import { ChatWidget } from "@/components/site/ChatWidget";
 import { BookingProvider } from "@/components/site/BookingProvider";
+import { BackgroundVideo } from "@/components/site/BackgroundVideo";
 
 const title = "LUXE Beauty Atelier — salon fryzjersko-kosmetyczny";
 const description =
@@ -37,20 +38,25 @@ function Index() {
 
   return (
     <BookingProvider>
-      <SiteHeader />
-      <main className="relative z-10">
-        <Hero onChat={() => setChatOpen(true)} />
-        <About />
-        <Services />
-        <Showcase />
-        <Team />
-        <WhyUs />
-        <Gallery />
-        <Testimonials />
-        <BookingSection />
-      </main>
-      <SiteFooter />
-      <ChatWidget open={chatOpen} setOpen={setChatOpen} />
+      <div className="site-video-page relative isolate min-h-screen overflow-hidden">
+        <BackgroundVideo src="/media/orchid-petals-hero.mp4" poster="/media/orchid-petals-hero-poster.jpg" />
+        <div className="relative z-10">
+          <SiteHeader />
+          <main>
+            <Hero onChat={() => setChatOpen(true)} />
+            <About />
+            <Services />
+            <Showcase />
+            <Team />
+            <WhyUs />
+            <Gallery />
+            <Testimonials />
+            <BookingSection />
+          </main>
+          <SiteFooter />
+          <ChatWidget open={chatOpen} setOpen={setChatOpen} />
+        </div>
+      </div>
     </BookingProvider>
   );
 }
