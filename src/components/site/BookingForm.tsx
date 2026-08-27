@@ -90,7 +90,7 @@ export function BookingForm({
   }
 
   return (
-    <form onSubmit={submit} className="grid gap-4">
+    <form onSubmit={submit} className="booking-form grid gap-4">
       <div className="grid gap-2">
         <Label htmlFor="bf-name">{t("booking.name")}</Label>
         <Input
