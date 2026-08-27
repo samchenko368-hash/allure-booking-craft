@@ -24,7 +24,7 @@ export function BookingSection() {
           </div>
         </Reveal>
         <Reveal delay={120}>
-          <div className="glass-panel rounded-3xl p-6 sm:p-8">
+          <div className="booking-form-surface rounded-3xl p-6 sm:p-8">
             <BookingForm source="website_form" />
           </div>
         </Reveal>

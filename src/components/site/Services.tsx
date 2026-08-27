@@ -33,7 +33,7 @@ export function Services() {
       <div className="mx-auto max-w-6xl">
         <Reveal>
           <div className="text-center">
-            <h2 className="font-display text-4xl md:text-5xl">{tr(c.heading)}</h2>
+            <h2 className="font-display text-4xl text-white drop-shadow-lg md:text-5xl">{tr(c.heading)}</h2>
             <p className="mx-auto mt-3 max-w-xl text-muted-foreground">{tr(c.subheading)}</p>
           </div>
         </Reveal>

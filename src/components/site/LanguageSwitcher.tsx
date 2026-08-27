@@ -15,12 +15,12 @@ export function LanguageSwitcher({ variant = "ghost" }: { variant?: "ghost" | "o
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant={variant} size="sm" className="gap-2 uppercase">
+        <Button variant={variant} size="sm" className="language-switcher gap-2 uppercase">
           <Globe className="h-4 w-4" />
           {lang}
         </Button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent align="end" className="min-w-44">
+      <DropdownMenuContent align="end" className="language-menu min-w-44">
         {LANGS.map((code: Lang) => (
           <DropdownMenuItem key={code} onSelect={() => setLang(code)} className="justify-between">
             {LANG_LABELS[code]}
