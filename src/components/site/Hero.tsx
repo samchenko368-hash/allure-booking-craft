@@ -68,7 +68,7 @@ function HeroVideoBackground() {
   }, []);
 
   return (
-    <div className="absolute inset-0 -z-10 overflow-hidden bg-[#120c19]" aria-hidden="true">
+    <div className="absolute inset-0 z-0 overflow-hidden bg-[#120c19]" aria-hidden="true">
       <div
         className="absolute inset-0 bg-cover bg-[position:65%_center] motion-reduce:bg-[position:65%_center]"
         style={{ backgroundImage: `url(${HERO_POSTER})` }}
