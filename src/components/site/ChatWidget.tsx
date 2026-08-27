@@ -119,14 +119,14 @@ export function ChatWidget({ open, setOpen }: { open: boolean; setOpen: (v: bool
       </button>
 
       {open && (
-        <div className="glass-panel fixed right-5 bottom-24 z-50 flex h-[520px] w-[min(92vw,380px)] animate-scale-in flex-col overflow-hidden rounded-3xl">
+        <div className="chat-widget glass-panel fixed right-5 bottom-24 z-50 flex h-[520px] w-[min(92vw,380px)] animate-scale-in flex-col overflow-hidden rounded-3xl text-white">
           <div className="flex items-center gap-3 border-b border-border/60 bg-gradient-to-r from-primary/15 to-transparent p-4">
             <span className="flex h-10 w-10 items-center justify-center rounded-full bg-primary/20">
               <Sparkles className="h-5 w-5 text-primary" />
             </span>
             <div>
-              <p className="font-display text-lg leading-tight">{t("chat.title")}</p>
-              <p className="text-xs text-muted-foreground">{t("chat.subtitle")}</p>
+              <p className="font-display text-lg leading-tight text-white">{t("chat.title")}</p>
+              <p className="text-xs text-white/80">{t("chat.subtitle")}</p>
             </div>
           </div>
 
@@ -137,8 +137,8 @@ export function ChatWidget({ open, setOpen }: { open: boolean; setOpen: (v: bool
                 className={cn(
                   "max-w-[85%] rounded-2xl px-4 py-2.5 text-sm",
                   m.role === "bot"
-                    ? "bg-secondary text-secondary-foreground"
-                    : "ml-auto bg-primary text-primary-foreground",
+                    ? "chat-bot-message bg-secondary text-white"
+                    : "chat-user-message ml-auto bg-primary text-white",
                 )}
               >
                 {m.text}
@@ -151,7 +151,7 @@ export function ChatWidget({ open, setOpen }: { open: boolean; setOpen: (v: bool
                   <button
                     key={k}
                     onClick={() => chip(k)}
-                    className="rounded-full border border-primary/40 px-3 py-1.5 text-xs text-primary transition-colors hover:bg-primary/10"
+                    className="rounded-full border border-primary/60 bg-black/20 px-3 py-1.5 text-xs text-white transition-colors hover:bg-primary/20"
                   >
                     {t(`chat.chip.${k}`)}
                   </button>
@@ -160,12 +160,13 @@ export function ChatWidget({ open, setOpen }: { open: boolean; setOpen: (v: bool
             )}
           </div>
 
-          <form onSubmit={send} className="flex items-center gap-2 border-t border-border/60 p-3">
+          <form onSubmit={send} className="flex items-center gap-2 border-t border-white/15 bg-black/20 p-3">
             <Input
               value={draft}
               onChange={(e) => setDraft(e.target.value)}
               placeholder={t("chat.placeholder")}
               aria-label={t("chat.placeholder")}
+              className="chat-message-input border-white/35 bg-black/25 text-white placeholder:text-white/65 focus-visible:border-white/80 focus-visible:ring-white/40"
             />
             <Button type="submit" size="icon" aria-label={t("chat.send")}>
               <Send className="h-4 w-4" />
