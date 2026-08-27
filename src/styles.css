@@ -88,17 +88,8 @@
   --sidebar-accent-foreground: oklch(0.97 0.01 310);
   --sidebar-border: oklch(0.34 0.06 302);
   --sidebar-ring: oklch(0.72 0.14 320);
-
-  --gradient-hero: linear-gradient(
-    135deg,
-    oklch(0.42 0.18 300 / 0.88),
-    oklch(0.62 0.16 320 / 0.72)
-  );
-  --gradient-veil: linear-gradient(
-    to bottom,
-    oklch(0.985 0.008 310 / 0.35),
-    oklch(0.985 0.008 310 / 0.92)
-  );
+  --gradient-hero: linear-gradient(135deg, oklch(0.42 0.18 300 / 0.88), oklch(0.62 0.16 320 / 0.72));
+  --gradient-veil: linear-gradient(to bottom, oklch(0.985 0.008 310 / 0.35), oklch(0.985 0.008 310 / 0.92));
   --shadow-luxe: 0 24px 60px -24px oklch(0.42 0.18 300 / 0.35);
   --shadow-soft: 0 8px 30px -12px oklch(0.42 0.18 300 / 0.22);
 }
@@ -125,32 +116,19 @@
 }
 
 @layer base {
-  * {
-    border-color: var(--color-border);
-  }
-
-  html {
-    scroll-behavior: smooth;
-  }
-
+  * { border-color: var(--color-border); }
+  html { scroll-behavior: smooth; }
   body {
     background-color: var(--color-background);
     color: var(--color-foreground);
     font-family: var(--font-sans);
     -webkit-font-smoothing: antialiased;
+    font-weight: 500;
   }
-
-  h1,
-  h2,
-  h3,
-  .font-display {
+  h1, h2, h3, .font-display {
     font-family: var(--font-display);
     font-weight: 700;
     letter-spacing: -0.015em;
-  }
-
-  body {
-    font-weight: 500;
   }
 }
 
@@ -159,11 +137,7 @@
   backdrop-filter: blur(var(--blur-20));
   border: 1px solid color-mix(in oklab, var(--primary) 30%, transparent);
   box-shadow: var(--shadow-soft);
-  transition:
-    box-shadow 0.4s ease,
-    border-color 0.4s ease,
-    transform 0.4s ease;
-
+  transition: box-shadow 0.4s ease, border-color 0.4s ease, transform 0.4s ease;
   &:hover {
     border-color: color-mix(in oklab, var(--primary) 55%, transparent);
     box-shadow: var(--shadow-glow);
@@ -180,16 +154,13 @@
   box-shadow: var(--shadow-glow2);
 }
 
-
 @utility text-gradient {
   background-image: linear-gradient(120deg, var(--primary), var(--primary-glow));
   background-clip: text;
   color: transparent;
 }
 
-@utility shadow-luxe {
-  box-shadow: var(--shadow-luxe);
-}
+@utility shadow-luxe { box-shadow: var(--shadow-luxe); }
 
 @utility section-shell {
   position: relative;
@@ -199,45 +170,52 @@
 }
 
 @keyframes reveal-up {
-  from {
-    opacity: 0;
-    transform: translateY(28px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+  from { opacity: 0; transform: translateY(28px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 
 @keyframes float-slow {
-  0%,
-  100% {
-    transform: translateY(0);
-  }
-  50% {
-    transform: translateY(-12px);
-  }
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-12px); }
 }
 
-.reveal {
-  opacity: 0;
+.reveal { opacity: 0; }
+.reveal.is-visible { animation: reveal-up 0.9s cubic-bezier(0.22, 1, 0.36, 1) forwards; }
+.animate-float-slow { animation: float-slow 7s ease-in-out infinite; }
+
+@media (prefers-reduced-motion: reduce) {
+  .reveal, .reveal.is-visible { opacity: 1; animation: none; }
+  html { scroll-behavior: auto; }
 }
 
-.reveal.is-visible {
-  animation: reveal-up 0.9s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+/* One continuous video background for the public home page. */
+.site-video-page {
+  --background: oklch(0.13 0.035 300 / 0.82);
+  --foreground: oklch(0.97 0.01 310);
+  --card: oklch(0.16 0.045 300 / 0.78);
+  --card-foreground: oklch(0.97 0.01 310);
+  --popover: oklch(0.16 0.045 300 / 0.96);
+  --popover-foreground: oklch(0.97 0.01 310);
+  --primary: oklch(0.74 0.14 320);
+  --primary-foreground: oklch(0.18 0.05 300);
+  --primary-glow: oklch(0.84 0.1 330);
+  --secondary: oklch(0.25 0.05 302 / 0.78);
+  --secondary-foreground: oklch(0.97 0.01 310);
+  --muted: oklch(0.23 0.045 302 / 0.76);
+  --muted-foreground: oklch(0.83 0.025 305);
+  --accent: oklch(0.31 0.07 305 / 0.82);
+  --accent-foreground: oklch(0.97 0.01 310);
+  --border: oklch(1 0 0 / 16%);
+  --input: oklch(1 0 0 / 17%);
+  --ring: oklch(0.76 0.14 320);
+  --gradient-veil: linear-gradient(180deg, oklch(0.08 0.025 300 / 0.2) 0%, oklch(0.1 0.03 300 / 0.4) 48%, oklch(0.08 0.025 300 / 0.58) 100%);
 }
 
-.animate-float-slow {
-  animation: float-slow 7s ease-in-out infinite;
+.site-video-page .section-shell {
+  background: linear-gradient(180deg, oklch(0.11 0.03 300 / 0.3), oklch(0.11 0.03 300 / 0.46));
+  backdrop-filter: blur(2px);
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .reveal,
-  .reveal.is-visible {
-    opacity: 1;
-    animation: none;
-  }
-  html {
-    scroll-behavior: auto;
-  }
+  .site-video-page .section-shell { backdrop-filter: none; }
 }
