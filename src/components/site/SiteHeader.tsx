@@ -31,11 +31,11 @@ export function SiteHeader() {
     <header
       className={cn(
         "fixed inset-x-0 top-0 z-50 transition-all duration-500",
-        scrolled ? "glass-panel py-2" : "py-5",
+        scrolled ? "glass-panel py-2" : "py-5 text-white",
       )}
     >
       <div className="mx-auto flex max-w-6xl items-center justify-between px-5">
-        <Link to="/" className="font-display text-2xl tracking-[0.2em] uppercase">
+        <Link to="/" className={cn("font-display text-2xl tracking-[0.2em] uppercase", !scrolled && "text-white drop-shadow-[0_2px_8px_rgba(0,0,0,0.7)]")}>
           {salonName.split(" ")[0]}
         </Link>
 
@@ -44,7 +44,7 @@ export function SiteHeader() {
             <a
               key={item.id}
               href={item.href}
-              className="relative text-sm tracking-wide text-foreground/80 transition-colors after:absolute after:-bottom-1 after:left-0 after:h-px after:w-full after:origin-bottom-right after:scale-x-0 after:bg-primary after:transition-transform after:duration-300 hover:text-foreground hover:after:origin-bottom-left hover:after:scale-x-100"
+              className={cn("relative text-sm tracking-wide transition-colors after:absolute after:-bottom-1 after:left-0 after:h-px after:w-full after:origin-bottom-right after:scale-x-0 after:bg-primary after:transition-transform after:duration-300 hover:after:origin-bottom-left hover:after:scale-x-100", scrolled ? "text-foreground/80 hover:text-foreground" : "text-white/90 drop-shadow-[0_2px_8px_rgba(0,0,0,0.7)] hover:text-white")}
             >
               {tr(item.label)}
             </a>
@@ -52,7 +52,7 @@ export function SiteHeader() {
         </nav>
 
         <div className="flex items-center gap-2">
-          <LanguageSwitcher />
+          <LanguageSwitcher variant={scrolled ? "ghost" : "outline"} />
           <Button variant="hero" size="lg" className="hidden md:inline-flex" onClick={() => open()}>
             {t("nav.book")}
           </Button>
