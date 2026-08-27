@@ -126,7 +126,7 @@ export function Hero({ onChat }: { onChat: () => void }) {
         </Reveal>
 
         <Reveal delay={240}>
-          <p className="mx-auto mt-6 max-w-2xl text-lg text-foreground/95 text-pretty drop-shadow-[0_2px_10px_rgba(0,0,0,0.6)] md:mx-0">
+          <p className="mx-auto mt-6 max-w-2xl text-lg text-white/85 text-pretty drop-shadow-[0_2px_10px_rgba(0,0,0,0.8)] md:mx-0">
             {tr(c.subheading)}
           </p>
         </Reveal>
